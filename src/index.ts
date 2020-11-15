@@ -1,13 +1,6 @@
 import puppeteer from "puppeteer";
 
-// (async () => {
-//   const browser = await puppeteer.launch({});
-//   const page = await browser.newPage();
-//   await page.goto("https:/www.google.com");
-
-//   await browser.close();
-// })();
-import express from 'express';
+import express from "express";
 
 const app = express();
 app.listen(process.env.PORT || 3000);
@@ -20,34 +13,32 @@ app.listen(process.env.PORT || 3000);
 //     await page.focus('__GUID_1007');
 //     await page.keyboard.type('hongkiulam');
 //   })
-  
+
 //   await page.screenshot({path: 'image.png'})
 //   res.send('hi')
 // });
-console.log('hi');
 
 (async () => {
+  console.log("Launch Browser...");
   const browser = await puppeteer.launch({});
+  console.log("-- Browser Launched");
   const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(0);
-  await page.goto('https://secure.vanguardinvestor.co.uk');
-  console.log('reached page')
-  await page.focus('#__GUID_1007');
-  await page.keyboard.type('hongkiulam');
-  await page.focus('#__GUID_1008');
-  await page.keyboard.type('2HW4dqU63z8MRWpk7XnNemwtgq68UM')
-  await page.click('.submit button');
-
-  // await page.waitForNavigation();
-  // Get cookies
-  // const cookies = await page.cookies();
-
-  // Use cookies in other tab or browser
-  // const page2 = await browser.newPage();
-  // await page2.setCookie(...cookies);
-  // await page2.goto('https://secure.vanguardinvestor.co.uk'); // Opens page as logged user
-
-  await page.screenshot({path: 'image.png'})
-  console.log('screenshot')
-  await browser.close()
-})()
+  console.log("Goto Vanguard Login...");
+  await page.goto("https://secure.vanguardinvestor.co.uk");
+  console.log("-- Reached Vanguard Page");
+  await page.focus("#__GUID_1007");
+  await page.keyboard.type("hongkiulam2308");
+  await page.focus("#__GUID_1008");
+  await page.keyboard.type("2HW4dqU63z8MRWpk7XnNemwtgq68UM");
+  await page.$eval(".submit button", (btn) =>
+    (btn as HTMLButtonElement).click()
+  );
+  console.log("Attempting Login...");
+  await page.waitForNavigation({ waitUntil: "networkidle2" });
+  await page.waitForSelector(
+    "body > div:nth-child(7) > div > div > div > div:nth-child(3) > div > div:nth-child(2) > section > div > div.container.container-heading > div > div.col-valuation-date.col-xxs-6.col-sm-4.content-middle > div "
+  );
+  console.log("-- Reached Dashboard");
+  await page.screenshot({ path: "image.png" });
+  await browser.close();
+})();
