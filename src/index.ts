@@ -1,24 +1,20 @@
 import puppeteer from "puppeteer";
 import express from "express";
+import {
+  INVESTMENTSRETURNED,
+  ISAVALUE,
+  PERFORMANCEBUTTON,
+  RATEOFRETURN,
+} from "./dashboardSelectors";
 require("dotenv").config();
 
 const app = express();
 app.listen(process.env.PORT || 3000);
 
-// app.get('/', async (req,res) => {
-//   const browser = await puppeteer.launch({});
-//   const page = await browser.newPage();
-//   await page.goto('https://secure.vanguardinvestor.co.uk')
-//   const login = await page.evaluate(async () => {
-//     await page.focus('__GUID_1007');
-//     await page.keyboard.type('hongkiulam');
-//   })
-
-//   await page.screenshot({path: 'image.png'})
-//   res.send('hi')
-// });
-
-(async () => {
+const getTextContent = (el: Element) => {
+  return el.textContent;
+};
+const main = async () => {
   console.log("Launch Browser...");
   const browser = await puppeteer.launch({});
   console.log("-- Browser Launched");
@@ -35,10 +31,31 @@ app.listen(process.env.PORT || 3000);
   );
   console.log("Attempting Login...");
   await page.waitForNavigation({ waitUntil: "networkidle2" });
-  await page.waitForSelector(
-    "body > div:nth-child(7) > div > div > div > div:nth-child(3) > div > div:nth-child(2) > section > div > div.container.container-heading > div > div.col-valuation-date.col-xxs-6.col-sm-4.content-middle > div "
-  );
+  await page.waitForSelector(ISAVALUE);
   console.log("-- Reached Dashboard");
-  await page.screenshot({ path: "image.png" });
+  const isaValue = await page.$eval(ISAVALUE, getTextContent);
+  const rateOfReturn = await page.$eval(RATEOFRETURN, (el) => {
+    const val = el.textContent;
+    const isNegative = el.classList.contains("text-negative");
+    return isNegative ? "-" : "+" + val;
+  });
+
+  // goto performance page
+  await page.$eval(PERFORMANCEBUTTON, (btn) =>
+    (btn as HTMLAnchorElement).click()
+  );
+  await page.waitForSelector(INVESTMENTSRETURNED);
+  const investmentsReturned = await page.$eval(
+    INVESTMENTSRETURNED,
+    getTextContent
+  );
+  const data = { isaValue, rateOfReturn, investmentsReturned };
+  console.log(data);
   await browser.close();
-})();
+  return data;
+};
+
+app.get("/", async (req, res) => {
+  const data = await main();
+  res.send(data);
+});

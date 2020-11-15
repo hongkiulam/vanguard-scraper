@@ -2,10 +2,12 @@
   "name": "vanguard-scraper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts'"
+    "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts'",
+    "build": "tsc",
+    "start": "node dist"
   },
   "keywords": [],
   "author": "",
