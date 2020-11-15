@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
-
 import express from "express";
+require("dotenv").config();
 
 const app = express();
 app.listen(process.env.PORT || 3000);
@@ -27,9 +27,9 @@ app.listen(process.env.PORT || 3000);
   await page.goto("https://secure.vanguardinvestor.co.uk");
   console.log("-- Reached Vanguard Page");
   await page.focus("#__GUID_1007");
-  await page.keyboard.type("hongkiulam2308");
+  await page.keyboard.type(process.env.VANGUARD_USERNAME!);
   await page.focus("#__GUID_1008");
-  await page.keyboard.type("2HW4dqU63z8MRWpk7XnNemwtgq68UM");
+  await page.keyboard.type(process.env.VANGUARD_PASSWORD!);
   await page.$eval(".submit button", (btn) =>
     (btn as HTMLButtonElement).click()
   );
