@@ -28,50 +28,91 @@ app.use(
 app.get("/", async (req, res) => {
   let data: ResponseData = {
     success: false,
-    errorMsg: ["Basic auth not provided"],
+    errorMsg: [],
   };
   const {
     user: username,
     password,
   } = (req as basicAuth.IBasicAuthedRequest).auth;
-  if (
-    username &&
-    password &&
-    typeof username === "string" &&
-    typeof password === "string"
-  ) {
-    let b; // browser
-    try {
-      data.errorMsg = ["Failed to start session"];
-      const { page, browser, userId } = await startSession(username, password);
-      b = browser;
-      data.errorMsg = [];
-      const personalDetails = await getPersonalDetails(page, userId);
-      const performance = await getPerformance(page, userId);
-      const isaDetails = await getIsaDetails(page, userId);
-      const holdings = await getHoldings(page, userId);
-      const valuationHistory = await getValuationHistory(page, userId);
-      const monthlyPerformance = await getMonthlyPerformance(page, userId);
-      data = {
-        ...data,
-        success: true,
-        result: {
-          personalDetails,
-          performance,
-          isaDetails,
-          holdings,
-          valuationHistory,
-          monthlyPerformance,
-        },
-      };
-    } catch (e) {
-      data.errorMsg?.push(e.message);
-    }
-    b?.close();
-    console.log("Closing Browser...");
-    res.send(data);
-  } else {
-    res.send(data);
+  let b; // browser
+  try {
+    data.errorMsg = ["Failed to start session"];
+    const { page, browser, userId } = await startSession(username, password);
+    b = browser;
+    data.errorMsg = [];
+    const personalDetails = await getPersonalDetails(page, userId);
+    const performance = await getPerformance(page, userId);
+    const isaDetails = await getIsaDetails(page, userId);
+    const holdings = await getHoldings(page, userId);
+    const valuationHistory = await getValuationHistory(page, userId);
+    const monthlyPerformance = await getMonthlyPerformance(page, userId);
+    data = {
+      ...data,
+      success: true,
+      result: {
+        personalDetails,
+        performance,
+        isaDetails,
+        holdings,
+        valuationHistory,
+        monthlyPerformance,
+      },
+    };
+  } catch (e) {
+    data.errorMsg?.push(e.message);
   }
+  b?.close();
+  console.log("Closing Browser...");
+  res.send(data);
+  console.log("Done");
+});
+
+app.get("/:resource", async (req, res) => {
+  let data: ResponseData = {
+    success: false,
+    errorMsg: [],
+  };
+  const {
+    user: username,
+    password,
+  } = (req as basicAuth.IBasicAuthedRequest).auth;
+  const resource = req.params.resource;
+  const actions: {
+    [doc: string]: (page: puppeteer.Page, userId: string) => Promise<any>;
+  } = {
+    personalDetails: getPersonalDetails,
+    performance: getPerformance,
+    isaDetails: getIsaDetails,
+    holdings: getHoldings,
+    valuationHistory: getValuationHistory,
+    monthlyPerformance: getMonthlyPerformance,
+  };
+
+  let b; // browser
+  try {
+    if (!actions[resource]) {
+      const invalidResourceMessage = Object.keys(actions).join(", ");
+      throw new Error(`Resource must be one of: ${invalidResourceMessage}`);
+    }
+
+    data.errorMsg = ["Failed to start session"];
+    const { page, browser, userId } = await startSession(username, password);
+    b = browser;
+    data.errorMsg = [];
+
+    const response = await actions[resource](page, userId);
+    data = {
+      ...data,
+      success: true,
+      result: {
+        [resource]: response,
+      },
+    };
+  } catch (e) {
+    data.errorMsg?.push(e.message);
+  }
+  b?.close();
+  console.log("Closing Browser...");
+  res.send(data);
   console.log("Done");
 });
