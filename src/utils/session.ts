@@ -15,6 +15,5 @@ export const startSession = async (username: string, password: string) => {
   const userId = pageUrl
     .replace("https://secure.vanguardinvestor.co.uk/en-GB/Customer/Home/", "")
     .replace("/Dashboard", "");
-  await page.goto("about:blank");
   return { page, userId, browser };
 };
