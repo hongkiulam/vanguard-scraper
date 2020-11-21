@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import express from "express";
 import basicAuth from "express-basic-auth";
-import { ResponseData } from "./types";
+import { ResponseData } from "./types/response";
 import { authorizer } from "./utils/auth";
 import { startSession } from "./utils/session";
 import {
@@ -68,6 +68,7 @@ app.get("/", async (req, res) => {
       data.errorMsg?.push(e.message);
     }
     b?.close();
+    console.log("Closing Browser...");
     res.send(data);
   } else {
     res.send(data);

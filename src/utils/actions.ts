@@ -1,10 +1,13 @@
 import puppeteer from "puppeteer";
 import {
+  VGHoldings,
   VGISADetails,
+  VGMonthlyPerformance,
   VGPerformance,
   VGPersonalDetails,
   VGResponse,
-} from "../types";
+  VGValuationHistory,
+} from "../types/vanguard";
 import {
   USERNAMEINPUT,
   PASSWORDINPUT,
@@ -12,6 +15,14 @@ import {
   MONTHLYPERFORMANCEBUTTON,
 } from "./document";
 import paths, { navigate } from "./paths";
+import {
+  sanitiseHoldings,
+  sanitiseIsaDetails,
+  sanitisePerformance,
+  sanitisePersonalDetails,
+  sanitiseValuationHistory,
+  santitiseMonthlyPerformance,
+} from "./sanitisers";
 
 export const login = async (
   page: puppeteer.Page,
@@ -46,7 +57,7 @@ export const getPersonalDetails = async (
     const personalDetails = (await response.json()) as VGResponse<
       VGPersonalDetails
     >;
-    return personalDetails.Result;
+    return sanitisePersonalDetails(personalDetails.Result);
   } catch {
     throw new Error("Failed to get personal details");
   }
@@ -62,7 +73,7 @@ export const getPerformance = async (page: puppeteer.Page, userId: string) => {
       )
     );
     const performance = (await response.json()) as VGResponse<VGPerformance>;
-    return performance.Result;
+    return sanitisePerformance(performance.Result);
   } catch {
     throw new Error("Failed to get performance");
   }
@@ -78,7 +89,7 @@ export const getIsaDetails = async (page: puppeteer.Page, userId: string) => {
       )
     );
     const isaDetails = (await response.json()) as VGResponse<VGISADetails>;
-    return isaDetails.Result;
+    return sanitiseIsaDetails(isaDetails.Result);
   } catch {
     throw new Error("Failed to get ISA Details");
   }
@@ -93,8 +104,8 @@ export const getHoldings = async (page: puppeteer.Page, userId: string) => {
         res.url()
       )
     );
-    const holdings = (await response.json()) as VGResponse<any>;
-    return holdings.Result;
+    const holdings = (await response.json()) as VGResponse<VGHoldings>;
+    return sanitiseHoldings(holdings.Result);
   } catch {
     throw new Error("Failed to get Holdings");
   }
@@ -111,8 +122,10 @@ export const getValuationHistory = async (
         res.url()
       )
     );
-    const valuationHistory = (await response.json()) as VGResponse<any>;
-    return valuationHistory.Result;
+    const valuationHistory = (await response.json()) as VGResponse<
+      VGValuationHistory
+    >;
+    return sanitiseValuationHistory(valuationHistory.Result);
   } catch {
     throw new Error("Failed to get Valuation History");
   }
@@ -132,8 +145,10 @@ export const getMonthlyPerformance = async (
         res.url()
       )
     );
-    const monthlyPerformance = (await response.json()) as VGResponse<any>;
-    return monthlyPerformance.Result;
+    const monthlyPerformance = (await response.json()) as VGResponse<
+      VGMonthlyPerformance
+    >;
+    return santitiseMonthlyPerformance(monthlyPerformance.Result);
   } catch {
     throw new Error("Failed to get Monthly Performance");
   }

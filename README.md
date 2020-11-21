@@ -1,5 +1,7 @@
 ### Vanguard Scraper
 
+For Vanguard Personal Investor UK
+
 ---
 
 #### logic
@@ -15,7 +17,8 @@
 - will `PercentageChange` property show negative?, if not then need to scrape from the DOM/ calculate it (might be easier, should be current valuation - invested to date) IGNORE, allow to be calculated client side
 - should i dockerise this
 - create a client
-- type all response?
+- type all response?Done
 - queries to filter responses
 - different routes for diffrent response
-- sanitisers
+- sanitisers Done
+- refactor regex requests
