@@ -10,7 +10,7 @@ const paths = (userId: string) => {
 export const navigate = async (page: puppeteer.Page, to: string) => {
   // if we are already on the page, force a refresh
   if (page.url() === to) {
-    await page.reload();
+    await page.reload({ waitUntil: "domcontentloaded" });
   } else {
     await page.goto(to);
   }

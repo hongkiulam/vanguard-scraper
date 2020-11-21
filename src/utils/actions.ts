@@ -23,6 +23,8 @@ import {
   sanitiseValuationHistory,
   santitiseMonthlyPerformance,
 } from "./sanitisers";
+import requests from "./requests";
+import { screenshot } from "./screenshot";
 
 export const login = async (
   page: puppeteer.Page,
@@ -50,9 +52,7 @@ export const getPersonalDetails = async (
   await navigate(page, paths(userId).DASHBOARD);
   try {
     const response = await page.waitForResponse((res) =>
-      /https:\/\/secure.vanguardinvestor.co.uk\/.*\/Api\/Customer\/CustomerPersonalDetails\/Get/.test(
-        res.url()
-      )
+      requests.PERSONALDETAILS.test(res.url())
     );
     const personalDetails = (await response.json()) as VGResponse<
       VGPersonalDetails
@@ -68,9 +68,7 @@ export const getPerformance = async (page: puppeteer.Page, userId: string) => {
   await navigate(page, paths(userId).DASHBOARD);
   try {
     const response = await page.waitForResponse((res) =>
-      /https:\/\/secure.vanguardinvestor.co.uk\/.*\/Api\/Performance\/SubaccountPerformance\/Get/.test(
-        res.url()
-      )
+      requests.PERFORMANCE.test(res.url())
     );
     const performance = (await response.json()) as VGResponse<VGPerformance>;
     return sanitisePerformance(performance.Result);
@@ -84,9 +82,7 @@ export const getIsaDetails = async (page: puppeteer.Page, userId: string) => {
   await navigate(page, paths(userId).DASHBOARD);
   try {
     const response = await page.waitForResponse((res) =>
-      /https:\/\/secure.vanguardinvestor.co.uk\/.*\/Api\/Allowance\/IsaAllowance\/Get/.test(
-        res.url()
-      )
+      requests.ISADETAILS.test(res.url())
     );
     const isaDetails = (await response.json()) as VGResponse<VGISADetails>;
     return sanitiseIsaDetails(isaDetails.Result);
@@ -100,9 +96,7 @@ export const getHoldings = async (page: puppeteer.Page, userId: string) => {
   await navigate(page, paths(userId).HOLDINGS);
   try {
     const response = await page.waitForResponse((res) =>
-      /https:\/\/secure.vanguardinvestor.co.uk\/.*\/Api\/Holdings\/SubAccountHoldings\/Get/.test(
-        res.url()
-      )
+      requests.HOLDINGS.test(res.url())
     );
     const holdings = (await response.json()) as VGResponse<VGHoldings>;
     return sanitiseHoldings(holdings.Result);
@@ -118,9 +112,7 @@ export const getValuationHistory = async (
   await navigate(page, paths(userId).PERSONALS);
   try {
     const response = await page.waitForResponse((res) =>
-      /https:\/\/secure.vanguardinvestor.co.uk\/.*\/Api\/Portfolio\/PortfolioValuationHistory\/Get/.test(
-        res.url()
-      )
+      requests.VALUATIONHISTORY.test(res.url())
     );
     const valuationHistory = (await response.json()) as VGResponse<
       VGValuationHistory
@@ -141,9 +133,7 @@ export const getMonthlyPerformance = async (
   );
   try {
     const response = await page.waitForResponse((res) =>
-      /https:\/\/secure.vanguardinvestor.co.uk\/.*\/Api\/Performance\/InvestmentMonthlyPerformance\/Get/.test(
-        res.url()
-      )
+      requests.MONTHLYPERFORMANCE.test(res.url())
     );
     const monthlyPerformance = (await response.json()) as VGResponse<
       VGMonthlyPerformance
