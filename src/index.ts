@@ -12,7 +12,6 @@ import {
   getPersonalDetails,
   getValuationHistory,
 } from "./utils/actions";
-require("dotenv").config();
 
 const app = express();
 app.listen(process.env.PORT || 8080);
