@@ -10,7 +10,8 @@ A web-scraping based API for a Vanguard Personal Investor Account (UK)
 
 - First install project dependencies with `npm install`, then:
   - `npm run dev` to run the app with nodemon which watches for file changes
-  - `npm run build && npm start` to run the app normally (no file watch)
+  - `npm run build && npm start` to run the app normally (no file watch),
+  - `npm run start:ts` to run the app without needing to transpile Typescript
 - OR, with `docker-compose` by running `docker-compose up -d` (`-d` for running in the background)
 
 ##### Authentication
