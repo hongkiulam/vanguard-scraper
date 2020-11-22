@@ -9,7 +9,7 @@
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
     "build": "tsc",
-    "start": "node dist"
+    "start": "ts-node src"
   },
   "keywords": [],
   "author": "",

@@ -4,7 +4,7 @@ import { login } from "./actions";
 export const startSession = async (username: string, password: string) => {
   let browser;
   console.log("Launch Browser...");
-  browser = await puppeteer.launch({});
+  browser = await puppeteer.launch({ args: ["--no-sandbox"] });
   const page = await browser.newPage();
   console.log("Goto Vanguard Login...");
   await page.goto("https://secure.vanguardinvestor.co.uk");

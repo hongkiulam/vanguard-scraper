@@ -14,11 +14,11 @@ For Vanguard Personal Investor UK
 
 #### notes
 
-- [ ] will `PercentageChange` property show negative?
-- [ ] docker
+- [x] ~~will `PercentageChange` property show negative?~~
+- [x] docker
 - [ ] create a client
 - [x] type all response?Done
-- [ ] queries to filter responses
-- [ ] different routes for diffrent response
+- [x] ~~queries to filter responses~~
+- [x] different routes for diffrent response
 - [x] sanitisers Done
 - [x] refactor regex requests DONE
