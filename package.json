@@ -1,8 +1,14 @@
 {
   "name": "vanguard-scraper",
   "version": "1.0.0",
-  "description": "",
+  "description": "Web-scraper based API for Vanguard Personal Investor UK",
   "main": "dist/index.js",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node src/index.ts'",
@@ -12,8 +18,7 @@
     "start": "ts-node src"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Hong-Kiu Lam",
   "dependencies": {
     "axios": "^0.21.0",
     "express": "^4.17.1",
