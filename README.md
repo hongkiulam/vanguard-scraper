@@ -10,7 +10,7 @@ A web-scraping based API for a Vanguard Personal Investor Account (UK)
 
 - First install project dependencies with `npm install`, then:
   - `npm run dev` to run the app with nodemon which watches for file changes
-  - `npm start` to run the app normally (no file watch)
+  - `npm run build && npm start` to run the app normally (no file watch)
 - OR, with `docker-compose` by running `docker-compose up -d` (`-d` for running in the background)
 
 ##### Authentication
@@ -26,6 +26,7 @@ Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
 ##### Resources
 
 _Fetch all available resources (exposed via API)_
+
 `GET /`
 
 ```json
