@@ -33,17 +33,18 @@ _Fetch all available resources (exposed via API)_
   "success": true,
   "errorMsg": [],
   "result": {
-    "personalDetails": { ... },
-    "performance": { ... },
-    "isaDetails": { ... },
-    "holdings": { ... },
-    "valuationHistory": { ... },
-    "monthlyPerformance": { ... },
+    "personalDetails": {},
+    "performance": {},
+    "isaDetails": {},
+    "holdings": {},
+    "valuationHistory": {},
+    "monthlyPerformance": {}
   }
 }
 ```
 
 _Fetch individual resources_
+
 `GET /personalDetails`
 
 ```json
@@ -139,7 +140,6 @@ _Fetch individual resources_
       "date": "1900-01-02T00:00:00",
       "value": 1000
     }
-    // ...objects representing daily value
   ]
 }
 ```
@@ -180,7 +180,6 @@ _Fetch individual resources_
       "Month": "Jan 1900",
       "OrderId": 0
     }
-    // object for each month
   ]
 }
 ```
@@ -190,7 +189,9 @@ _Fetch individual resources_
 When a request is sent to the API, we start a [puppeteer](https://github.com/puppeteer/puppeteer) session in the background which navigates to the Vanguard login page. We attempt a login by interacting with the page, filling in the forms using the credentials provided via HTTP Basic Auth.
 
 On successful login, a series of operations are performed to get the required data. This involves navigating to specific pages and receiving JSON responses with puppeteer's `waitForResponse` method.
+
 This should provide a more robust alternative to parsing the content on the page using DOM selectors as those are subject to breaking with any UI changes on the page. Directly accessing the JSON responses from the page should provide more longevity as those are less likely to change.
+
 However, in the case of the `monthlyPerformance` resource, its request is only fired after a specific button click on the page, thus the app would need to be updated in response to UI changes on Vanguard's front-end.
 
 ###### dev notes
