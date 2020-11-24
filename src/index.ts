@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import express from "express";
 import basicAuth from "express-basic-auth";
+import cors from "cors";
 import { ResponseData } from "./types/response";
 import { authorizer } from "./utils/auth";
 import { startSession } from "./utils/session";
@@ -16,6 +17,7 @@ import {
 const app = express();
 app.listen(process.env.PORT || 8080);
 
+app.use(cors());
 app.use(
   basicAuth({
     challenge: true,

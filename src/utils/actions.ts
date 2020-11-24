@@ -24,7 +24,6 @@ import {
   santitiseMonthlyPerformance,
 } from "./sanitisers";
 import requests from "./requests";
-import { screenshot } from "./screenshot";
 
 export const login = async (
   page: puppeteer.Page,
@@ -32,12 +31,13 @@ export const login = async (
   password: string
 ) => {
   try {
+    console.log("Input credentials...");
     await page.focus(USERNAMEINPUT);
     await page.keyboard.type(username);
     await page.focus(PASSWORDINPUT);
     await page.keyboard.type(password);
-    await page.$eval(LOGINBUTTON, (btn) => (btn as HTMLButtonElement).click());
     console.log("Attempting Login...");
+    await page.$eval(LOGINBUTTON, (btn) => (btn as HTMLButtonElement).click());
   } catch {
     // this shouldnt happen as we pre-authenticate beforehand
     throw new Error("Failed to login");
@@ -54,9 +54,7 @@ export const getPersonalDetails = async (
     const response = await page.waitForResponse((res) =>
       requests.PERSONALDETAILS.test(res.url())
     );
-    const personalDetails = (await response.json()) as VGResponse<
-      VGPersonalDetails
-    >;
+    const personalDetails = (await response.json()) as VGResponse<VGPersonalDetails>;
     return sanitisePersonalDetails(personalDetails.Result);
   } catch {
     throw new Error("Failed to get personal details");
@@ -114,9 +112,7 @@ export const getValuationHistory = async (
     const response = await page.waitForResponse((res) =>
       requests.VALUATIONHISTORY.test(res.url())
     );
-    const valuationHistory = (await response.json()) as VGResponse<
-      VGValuationHistory
-    >;
+    const valuationHistory = (await response.json()) as VGResponse<VGValuationHistory>;
     return sanitiseValuationHistory(valuationHistory.Result);
   } catch {
     throw new Error("Failed to get Valuation History");
@@ -135,9 +131,7 @@ export const getMonthlyPerformance = async (
     const response = await page.waitForResponse((res) =>
       requests.MONTHLYPERFORMANCE.test(res.url())
     );
-    const monthlyPerformance = (await response.json()) as VGResponse<
-      VGMonthlyPerformance
-    >;
+    const monthlyPerformance = (await response.json()) as VGResponse<VGMonthlyPerformance>;
     return santitiseMonthlyPerformance(monthlyPerformance.Result);
   } catch {
     throw new Error("Failed to get Monthly Performance");
