@@ -26,6 +26,16 @@ Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
 
 ##### Resources
 
+_Check if username and password are valid_
+
+`GET /authorise`
+
+```xml
+Responds with
+200 OK
+401 Unauthorized
+```
+
 _Fetch all available resources (exposed via API)_
 
 `GET /`

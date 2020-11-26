@@ -68,6 +68,10 @@ app.get("/", async (req, res) => {
   console.log("Done");
 });
 
+app.get("/authorise", (req, res) => {
+  res.sendStatus(200);
+});
+
 app.get("/:resource", async (req, res) => {
   let data: ResponseData = {
     success: false,
