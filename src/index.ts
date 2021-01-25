@@ -4,7 +4,7 @@ import basicAuth from "express-basic-auth";
 import cors from "cors";
 import { ResponseData } from "./types/response";
 import { authorizer } from "./utils/auth";
-import { startSession } from "./utils/session";
+import { startSession } from "./utils/startSession";
 import {
   getHoldings,
   getIsaDetails,

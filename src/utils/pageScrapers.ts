@@ -18,7 +18,7 @@ import {
   MONTHLYPERFORMANCEBUTTON,
   PASSWORDINPUT,
   USERNAMEINPUT,
-} from "./document";
+} from "../constants/document";
 import paths from "./paths";
 
 export const attemptLogin = async (

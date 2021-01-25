@@ -13,7 +13,7 @@ import {
   PASSWORDINPUT,
   LOGINBUTTON,
   MONTHLYPERFORMANCEBUTTON,
-} from "./document";
+} from "../constants/document";
 import paths, { navigate } from "./paths";
 import {
   sanitiseHoldings,
@@ -23,7 +23,7 @@ import {
   sanitiseValuationHistory,
   santitiseMonthlyPerformance,
 } from "./sanitisers";
-import requests from "./requests";
+import requests from "../constants/requests";
 
 export const login = async (
   page: puppeteer.Page,
