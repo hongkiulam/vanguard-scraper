@@ -49,11 +49,11 @@ export const getPersonalDetails = async (
   userId: string
 ) => {
   console.log("Scraping Personal Details...");
-  await navigate(page, paths(userId).DASHBOARD);
   try {
-    const response = await page.waitForResponse((res) =>
-      requests.PERSONALDETAILS.test(res.url())
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => requests.PERSONALDETAILS.test(res.url())),
+      navigate(page, paths(userId).DASHBOARD),
+    ]);
     const personalDetails = (await response.json()) as VGResponse<VGPersonalDetails>;
     return sanitisePersonalDetails(personalDetails.Result);
   } catch {
@@ -63,11 +63,11 @@ export const getPersonalDetails = async (
 
 export const getPerformance = async (page: puppeteer.Page, userId: string) => {
   console.log("Scraping Performance...");
-  await navigate(page, paths(userId).DASHBOARD);
   try {
-    const response = await page.waitForResponse((res) =>
-      requests.PERFORMANCE.test(res.url())
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => requests.PERFORMANCE.test(res.url())),
+      navigate(page, paths(userId).DASHBOARD),
+    ]);
     const performance = (await response.json()) as VGResponse<VGPerformance>;
     return sanitisePerformance(performance.Result);
   } catch {
@@ -77,11 +77,11 @@ export const getPerformance = async (page: puppeteer.Page, userId: string) => {
 
 export const getIsaDetails = async (page: puppeteer.Page, userId: string) => {
   console.log("Scraping ISA Details...");
-  await navigate(page, paths(userId).DASHBOARD);
   try {
-    const response = await page.waitForResponse((res) =>
-      requests.ISADETAILS.test(res.url())
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => requests.ISADETAILS.test(res.url())),
+      navigate(page, paths(userId).DASHBOARD),
+    ]);
     const isaDetails = (await response.json()) as VGResponse<VGISADetails>;
     return sanitiseIsaDetails(isaDetails.Result);
   } catch {
@@ -91,11 +91,11 @@ export const getIsaDetails = async (page: puppeteer.Page, userId: string) => {
 
 export const getHoldings = async (page: puppeteer.Page, userId: string) => {
   console.log("Scraping Holdings...");
-  await navigate(page, paths(userId).HOLDINGS);
   try {
-    const response = await page.waitForResponse((res) =>
-      requests.HOLDINGS.test(res.url())
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => requests.HOLDINGS.test(res.url())),
+      navigate(page, paths(userId).HOLDINGS),
+    ]);
     const holdings = (await response.json()) as VGResponse<VGHoldings>;
     return sanitiseHoldings(holdings.Result);
   } catch {
@@ -107,11 +107,11 @@ export const getValuationHistory = async (
   userId: string
 ) => {
   console.log("Scraping Valuation History...");
-  await navigate(page, paths(userId).PERSONALS);
   try {
-    const response = await page.waitForResponse((res) =>
-      requests.VALUATIONHISTORY.test(res.url())
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse((res) => requests.VALUATIONHISTORY.test(res.url())),
+      navigate(page, paths(userId).PERSONALS),
+    ]);
     const valuationHistory = (await response.json()) as VGResponse<VGValuationHistory>;
     return sanitiseValuationHistory(valuationHistory.Result);
   } catch {
@@ -123,14 +123,16 @@ export const getMonthlyPerformance = async (
   userId: string
 ) => {
   console.log("Scraping Monthly Performance...");
-  await navigate(page, paths(userId).PERSONALS);
-  await page.$eval(MONTHLYPERFORMANCEBUTTON, (el) =>
-    (el as HTMLElement).click()
-  );
+  await navigate(page, paths(userId).PERSONALS, "networkidle2");
+
   try {
-    const response = await page.waitForResponse((res) =>
-      requests.MONTHLYPERFORMANCE.test(res.url())
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse((res) =>
+        requests.MONTHLYPERFORMANCE.test(res.url())
+      ),
+      page.$eval(MONTHLYPERFORMANCEBUTTON, (el) => (el as HTMLElement).click()),
+    ]);
+
     const monthlyPerformance = (await response.json()) as VGResponse<VGMonthlyPerformance>;
     return santitiseMonthlyPerformance(monthlyPerformance.Result);
   } catch {
