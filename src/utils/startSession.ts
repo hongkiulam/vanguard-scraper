@@ -12,10 +12,12 @@ export const startSession = async (username: string, password: string) => {
     timeout: 60000, // wait for 1 minute before timing out
   });
   await login(page, username, password);
-  await page.waitForNavigation();
+  await page.waitForNavigation({
+    waitUntil: "networkidle2",
+  });
   const pageUrl = page.url();
   const userId = pageUrl
     .replace("https://secure.vanguardinvestor.co.uk/en-GB/Customer/Home/", "")
-    .replace("/Dashboard", "");
+    .replace(/\/[Dd]ashboard/, "");
   return { page, userId, browser };
 };

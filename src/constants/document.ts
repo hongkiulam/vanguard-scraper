@@ -12,10 +12,9 @@ export const INVESTMENTSRETURNED = dataReactId(
 );
 export const USERNAMEINPUT = "#__GUID_1007";
 export const PASSWORDINPUT = "#__GUID_1008";
-export const LOGINBUTTON = dataReactId(".0.1:2.0.0.1.0.1:3.1.2.0");
-export const MONTHLYPERFORMANCEBUTTON = dataReactId(
-  ".0.1:0:3.1.1:1.1:0.1:1.1.2.0.1:3.1:1.2.0"
-);
+export const LOGINBUTTON = "div.panel-login-form > div.submit > button";
+export const MONTHLYPERFORMANCEBUTTON =
+  "div.tabs.investments-performance-tabs a.tab-month";
 // Others
 export const getTextContent = (el: Element) => {
   return el.textContent;
