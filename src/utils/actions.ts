@@ -123,7 +123,7 @@ export const getMonthlyPerformance = async (
   userId: string
 ) => {
   console.log("Scraping Monthly Performance...");
-  await navigate(page, paths(userId).PERSONALS, "networkidle2");
+  await navigate(page, paths(userId).PERSONALS);
 
   try {
     const [response] = await Promise.all([

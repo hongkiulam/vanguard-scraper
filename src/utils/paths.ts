@@ -10,7 +10,7 @@ const paths = (userId: string) => {
 export const navigate = async (
   page: puppeteer.Page,
   to: string,
-  waitUntil: puppeteer.NavigationOptions["waitUntil"] = "domcontentloaded"
+  waitUntil: puppeteer.NavigationOptions["waitUntil"] = "networkidle2"
 ) => {
   // if we are already on the page, force a refresh
   if (page.url() === to) {
