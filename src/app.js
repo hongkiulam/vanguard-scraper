@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const Vanguard = require("./vg");
 const http = require("http");
 const Router = require("router");
