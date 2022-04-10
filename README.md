@@ -2,4 +2,4 @@
 
 A web-scraping based API for a Vanguard Personal Investor Account (UK)
 
-Stripped down version using Scraping Ant API
+Stripped down version of [original Puppeteer implementation](https://github.com/hongkiulam/vanguard-scraper/tree/master) using Scraping Ant API
