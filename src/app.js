@@ -44,6 +44,20 @@ router.get("/performance", async (req, res, next) => {
   }
 });
 
+router.get("/graph", async (req, res, next) => {
+  try {
+    const vg = new Vanguard();
+    await vg.login();
+    const performance = await vg.performance();
+    const graph = performance.querySelector("#highcharts-0");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "image/svg+xml");
+    res.end(graph.innerHTML);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.use((err, req, res, next) => {
   res.setHeader("Content-Type", "text/html; charset=UTF-8");
   res.end(err ? err.message : "🤷 Something went wrong");
@@ -56,4 +70,6 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(process.env.PORT || 3000);
+const port = process.env.PORT || 3000;
+server.listen(port);
+console.log(`Listening on port ${port}`);
