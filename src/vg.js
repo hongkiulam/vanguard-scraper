@@ -13,15 +13,21 @@ const VG_PASSWORD = process.env.VG_PASSWORD;
 const VG_USERID = process.env.VG_USERID;
 
 class Vanguard {
-  _cookies = "";
+  _cookieJar = new tough.CookieJar();
   /**
    * @param {string} url
    */
   async _scrape(url) {
     console.log("⌛ " + url);
+    const serialisedCookies = this._cookieJar.serializeSync();
+    const cookies = serialisedCookies.cookies
+      .map((cookie) => {
+        return `${cookie.key}=${cookie.value}`;
+      })
+      .join(";");
     const response = await axios.post(
       "https://api.scrapingant.com/v1/general",
-      { url, cookies: this._cookies },
+      { url, cookies },
       {
         headers: {
           "x-api-key": SCRAPING_ANT_API_KEY,
@@ -30,13 +36,12 @@ class Vanguard {
         },
       }
     );
-    this._cookies = response.data.cookies;
+    this._cookieJar.setCookieSync(response.data.cookies, {}, {});
     console.log("👌 " + url);
     return new JSDOM(response.data.content).window.document;
   }
   async login() {
     console.log("⌛ " + "logging in");
-    const jar = new tough.CookieJar();
     await axios.post(
       "https://secure.vanguardinvestor.co.uk/en-GB/Api/Session/Login/Post",
       {
@@ -46,14 +51,8 @@ class Vanguard {
           isFromPublicSite: false,
         },
       },
-      { jar }
+      { jar: this._cookieJar }
     );
-    const serialisedCookies = jar.serializeSync();
-    this._cookies = serialisedCookies.cookies
-      .map((cookie) => {
-        return `${cookie.key}=${cookie.value}`;
-      })
-      .join(";");
     console.log("👌 " + "logged in");
   }
   async homepage() {
