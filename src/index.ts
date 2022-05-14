@@ -13,7 +13,13 @@ export default {
     request: Request,
     env: Record<string, string>
   ): Promise<Response> => {
-    fetch(env.API_URL);
-    return new Response(`Polled ${env.API_URL} at ${new Date().toUTCString()}`);
+    return new Response(`I'm alive`);
+  },
+  scheduled: async (
+    event: any,
+    env: Record<string, string>,
+    ctx: { waitUntil: Function }
+  ) => {
+    ctx.waitUntil(fetch(env.API_URL));
   },
 };
