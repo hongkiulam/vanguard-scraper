@@ -6,7 +6,7 @@ compatibility_date = "2022-05-14"
 # More details: https://developers.cloudflare.com/workers/platform/cron-triggers
 # @default `{crons:[]}`
 [triggers]
-crons = ["0 12 * * *""]
+crons = ["0 12 * * *"]
 
 # [secrets] # npm run add-secret <secret_name>
 # API_URL
