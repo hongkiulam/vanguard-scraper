@@ -1,8 +1,8 @@
 FROM node:16-alpine as pnpm-runner
 WORKDIR /app
-RUN npm i -g pnpm
+RUN npm i --location=global pnpm
 
-COPY package* .
+COPY package* ./
 
 RUN pnpm i
 
