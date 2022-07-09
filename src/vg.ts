@@ -14,10 +14,7 @@ const VG_USERID = process.env.VG_USERID;
 
 class Vanguard {
   _cookieJar = new tough.CookieJar();
-  /**
-   * @param {string} url
-   */
-  async _scrape(url) {
+  async _scrape(url: string) {
     console.log("⌛ " + url);
     const serialisedCookies = this._cookieJar.serializeSync();
     const cookies = serialisedCookies.cookies
@@ -36,7 +33,7 @@ class Vanguard {
         },
       }
     );
-    this._cookieJar.setCookieSync(response.data.cookies, '', {});
+    this._cookieJar.setCookieSync(response.data.cookies, "", {});
     console.log("👌 " + url);
     return new JSDOM(response.data.content).window.document;
   }
@@ -67,4 +64,4 @@ class Vanguard {
   }
 }
 
-export default Vanguard
+export default Vanguard;

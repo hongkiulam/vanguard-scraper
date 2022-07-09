@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/app.ts",
+    "start": "ts-node src/server.ts",
     "compress": "tar cf app.tar .env src package.json"
   },
   "keywords": [],
@@ -21,14 +21,17 @@
     "axios-cookiejar-support": "^1.0.1",
     "dotenv": "^10.0.0",
     "jsdom": "^17.0.0",
-    "router": "^1.3.5",
+    "mongoose": "^6.4.4",
     "tough-cookie": "^4.0.0",
-    "ts-node": "^10.8.2"
+    "ts-node": "^10.8.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/jsdom": "^16.2.14",
     "@types/node": "^18.0.3",
+    "@types/node-cron": "^3.0.2",
     "@types/tough-cookie": "^4.0.2",
-    "connect": "^3.7.0",
+    "node-cron": "^3.0.1",
     "typescript": "^4.7.4"
   }
 }
