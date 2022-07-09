@@ -6,7 +6,7 @@ import connect, { Performance } from "./database";
 import { justDate } from "./utils";
 import Vanguard from "./vg";
 
-cron.schedule("0 12 * * *", async () => {
+cron.schedule("0 5 * * *", async () => {
   const vg = new Vanguard();
   await vg.login();
   const performance = await vg.performance();
@@ -41,11 +41,21 @@ cron.schedule("0 12 * * *", async () => {
 
 connect();
 const server = http.createServer(async (req, res) => {
+  res.setHeader("Content-Type", "application/json; charset=UTF-8");
+  const url = req.url;
   try {
-    
-    const performance = await Performance.find();
-    res.setHeader("Content-Type", "application/json; charset=UTF-8");
-    res.end(JSON.stringify(performance));
+    if (url === "/" || url === "/today") {
+      const performance = await Performance.findOne(
+        {},
+        {},
+        { sort: { date: -1 } }
+      );
+      return res.end(JSON.stringify(performance));
+    }
+    if (url === "/all") {
+      const performance = await Performance.find();
+      res.end(JSON.stringify(performance));
+    }
   } catch (err) {
     const error = err as Error;
     res.end(error.message);
