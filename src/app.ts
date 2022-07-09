@@ -1,10 +1,10 @@
-const path = require("path");
+import path from "path";
 require("dotenv").config({ path: path.join(__dirname, "../.env") });
-const Vanguard = require("./vg");
-const http = require("http");
-const Router = require("router");
+import Vanguard from "./vg";
+import http from "http";
+import Router from "router";
 
-const router = Router();
+const router = new Router();
 
 router.use((req, res, next) => {
   res.setHeader("Content-Type", "application/json");
@@ -20,20 +20,20 @@ router.get("/performance", async (req, res, next) => {
     const value = Number(
       performance
         .querySelector(".stat-ended .figure span")
-        ?.textContent.replace("£", "")
+        ?.textContent?.replace("£", "")
         .replace(",", "")
     );
     const amountChange = Number(
       performance
         .querySelector(".stat-row.last .figure span")
-        ?.textContent.replace("£", "")
+        ?.textContent?.replace("£", "")
         .replace(",", "")
     );
     const percentageChange =
       Number(
         performance
           .querySelector(".stat-return .figure")
-          ?.textContent.replace("%", "")
+          ?.textContent?.replace("%", "")
           .replace("-", "")
           .replace("+", "")
           .replace(",", "")
@@ -52,7 +52,7 @@ router.get("/graph", async (req, res, next) => {
     const graph = performance.querySelector("#highcharts-0");
     res.statusCode = 200;
     res.setHeader("Content-Type", "image/svg+xml");
-    res.end(graph.innerHTML);
+    res.end(graph?.innerHTML);
   } catch (err) {
     next(err);
   }
@@ -64,6 +64,7 @@ router.use((err, req, res, next) => {
 });
 
 const server = http.createServer(async (req, res) => {
+  // @ts-ignore
   router(req, res, () => {
     res.setHeader("Content-Type", "text/html; charset=UTF-8");
     res.end("🤷 Page not found");

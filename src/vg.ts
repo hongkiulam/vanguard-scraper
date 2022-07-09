@@ -1,7 +1,7 @@
-const axios = require("axios").default;
-const axiosCookieJarSupport = require("axios-cookiejar-support").default;
-const tough = require("tough-cookie");
-const jsdom = require("jsdom");
+import axios from "axios";
+import axiosCookieJarSupport from "axios-cookiejar-support";
+import tough from "tough-cookie";
+import jsdom from "jsdom";
 
 const { JSDOM } = jsdom;
 
@@ -36,7 +36,7 @@ class Vanguard {
         },
       }
     );
-    this._cookieJar.setCookieSync(response.data.cookies, {}, {});
+    this._cookieJar.setCookieSync(response.data.cookies, '', {});
     console.log("👌 " + url);
     return new JSDOM(response.data.content).window.document;
   }
@@ -67,4 +67,4 @@ class Vanguard {
   }
 }
 
-module.exports = Vanguard;
+export default Vanguard
