@@ -2,7 +2,7 @@ import cron from "node-cron";
 import http from "http";
 import config from "./config";
 
-import connect, { Performance } from "./database";
+import db, { insertMany, insertOne } from "./database";
 import { justDate } from "./utils";
 import Vanguard from "./vg";
 
@@ -31,30 +31,42 @@ cron.schedule("0 5 * * *", async () => {
         .replace("+", "")
         .replace(",", "")
     ) / 100;
-  await Performance.create({
-    amountChange: amountChange,
-    percentageChange: percentageChange,
+  insertOne({
+    amount_change: amountChange,
+    percentage_change: percentageChange,
     value: value,
     date: justDate(new Date()),
   });
 });
 
-connect();
 const server = http.createServer(async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=UTF-8");
   const url = req.url;
+  const method = req.method
   try {
+    if (url === "/" && method === "POST") {      
+      const buffers = [];
+
+      for await (const chunk of req) {
+        buffers.push(chunk);
+      }
+      const strData = Buffer.concat(buffers).toString();
+      const data = JSON.parse(strData)
+      const result = insertMany(data);
+      return res.end(JSON.stringify(result)); 
+    }
+
     if (url === "/" || url === "/today") {
-      const performance = await Performance.findOne(
-        {},
-        {},
-        { sort: { date: -1 } }
-      );
+      const performance = db
+        .prepare("select * from performances order by date desc limit 1")
+        .get();
       return res.end(JSON.stringify(performance));
     }
     if (url === "/all") {
-      const performance = await Performance.find();
-      res.end(JSON.stringify(performance));
+      const performances = db
+        .prepare("select * from performances order by date asc")
+        .all();
+      res.end(JSON.stringify(performances));
     }
   } catch (err) {
     const error = err as Error;
