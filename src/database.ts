@@ -1,5 +1,5 @@
 import Database from "better-sqlite3";
-const db = new Database("db/data.db");
+const db = new Database("data.db");
 export default db;
 
 const tableExists = db
