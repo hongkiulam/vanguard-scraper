@@ -2,7 +2,7 @@ import cron from "node-cron";
 import http from "http";
 import config from "./config";
 
-import db, { insertMany, insertOne } from "./database";
+import { findAll, findLatest, insertMany, insertOne } from "./database";
 import { justDate } from "./utils";
 import Vanguard from "./vg";
 
@@ -10,6 +10,12 @@ const getTodayLive = async () => {
   const vg = new Vanguard();
   await vg.login();
   const performance = await vg.performance();
+  console.log(
+    performance
+      .querySelector(".portfolio-header .value")
+      ?.textContent?.replace("£", "")
+      .replace(",", "")
+  );
   const value = Number(
     performance
       .querySelector(".portfolio-header .value")
@@ -36,13 +42,33 @@ const getTodayLive = async () => {
 };
 
 cron.schedule("0 5 * * *", async () => {
-  const { value, amount_change, percentage_change } = await getTodayLive();
-  insertOne({
-    amount_change: amount_change,
-    percentage_change: percentage_change,
-    value: value,
-    date: justDate(new Date()),
-  });
+  let attempts = 0;
+  try {
+    const perform = async () => {
+      try {
+        const { value, amount_change, percentage_change } =
+          await getTodayLive();
+        await insertOne({
+          amount_change: amount_change,
+          percentage_change: percentage_change,
+          value: value,
+          date: justDate(new Date()),
+        });
+      } catch (err) {
+        attempts++;
+        console.log("Tried %d time(s)", attempts);
+        if (attempts >= 3) {
+          throw err;
+        } else {
+          await perform();
+        }
+      }
+    };
+    await perform();
+  } catch (err) {
+    const error = err as Error;
+    console.log("Error performing cron", error.message);
+  }
 });
 
 const server = http.createServer(async (req, res) => {
@@ -78,24 +104,24 @@ const server = http.createServer(async (req, res) => {
       }
       const strData = Buffer.concat(buffers).toString();
       const data = JSON.parse(strData);
-      const result = insertMany(data);
+      const result = await insertMany(data);
       return res.end(JSON.stringify(result));
     }
 
     if (url === "/" || url === "/today") {
-      const performance = db
-        .prepare("select * from performances order by date desc limit 1")
-        .get();
+      const performance = await findLatest()
       return res.end(JSON.stringify(performance));
     }
     if (url === "/all") {
-      const performances = db
-        .prepare("select * from performances order by date asc")
-        .all();
+      const performances = await findAll()
       return res.end(JSON.stringify(performances));
     }
     if (url === "/live") {
       const todaysPerformance = await getTodayLive();
+      await insertOne({
+        ...todaysPerformance,
+        date: justDate(new Date()),
+      });
       return res.end(JSON.stringify(todaysPerformance));
     }
   } catch (err) {

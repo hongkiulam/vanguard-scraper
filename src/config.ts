@@ -4,10 +4,12 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 
 export default {
   port: Number(process.env.PORT) || 3000,
-  mongoPassword: process.env.MONGOPASSWORD || "",
-  mongoHost: process.env.MONGOHOST || "",
-  mongoUser: process.env.MONGOUSER || "",
-  mongoPort: process.env.MONGOPORT || "",
+  mysqlPassword: process.env.MYSQLPASSWORD,
+  mysqlHost: process.env.MYSQLHOST,
+  mysqlPort: Number(process.env.MYSQLPORT),
+  mysqlUrl: process.env.MYSQL_URL,
+  mysqlUser: process.env.MYSQLUSER,
+  mysqlDatabase: process.env.MYSQLDATABASE,
   basicAuthUser: process.env.BASIC_AUTH_USER,
   basicAuthPassword: process.env.BASIC_AUTH_PASSWORD,
   scrapingAntKey: process.env.SCRAPING_ANT_API_KEY || "",
