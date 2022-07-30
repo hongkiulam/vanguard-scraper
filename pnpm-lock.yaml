@@ -6,7 +6,7 @@ specifiers:
   '@types/node': ^18.0.3
   '@types/node-cron': ^3.0.2
   '@types/tough-cookie': ^4.0.2
-  axios: ^0.21.1
+  axios: ^0.27.2
   axios-cookiejar-support: ^1.0.1
   better-sqlite3: ^7.6.2
   dotenv: ^10.0.0
@@ -18,8 +18,8 @@ specifiers:
   uuid: ^8.3.2
 
 dependencies:
-  axios: 0.21.1
-  axios-cookiejar-support: 1.0.1_75mxbl4xyjj6rwwg4akyfzi4ja
+  axios: 0.27.2
+  axios-cookiejar-support: 1.0.1_qszhnishavvu34bza74kqaegh4
   better-sqlite3: 7.6.2
   dotenv: 10.0.0
   jsdom: 20.0.0
@@ -166,7 +166,7 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: false
 
-  /axios-cookiejar-support/1.0.1_75mxbl4xyjj6rwwg4akyfzi4ja:
+  /axios-cookiejar-support/1.0.1_qszhnishavvu34bza74kqaegh4:
     resolution: {integrity: sha512-IZJxnAJ99XxiLqNeMOqrPbfR7fRyIfaoSLdPUf4AMQEGkH8URs0ghJK/xtqBsD+KsSr3pKl4DEQjCn834pHMig==}
     engines: {node: '>= 10.0.0'}
     peerDependencies:
@@ -175,16 +175,17 @@ packages:
       tough-cookie: '>=2.3.3'
     dependencies:
       '@types/tough-cookie': 4.0.2
-      axios: 0.21.1
+      axios: 0.27.2
       is-redirect: 1.0.0
       pify: 5.0.0
       tough-cookie: 4.0.0
     dev: false
 
-  /axios/0.21.1:
-    resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
+  /axios/0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
     dependencies:
-      follow-redirects: 1.14.2
+      follow-redirects: 1.15.1
+      form-data: 4.0.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -377,8 +378,8 @@ packages:
     resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
     dev: false
 
-  /follow-redirects/1.14.2:
-    resolution: {integrity: sha512-yLR6WaE2lbF0x4K2qE2p9PEXKLDjUjnR/xmjS3wHAYxtlsI9MLLBJUZirAHKzUZDGLxje7w/cXR49WOUo4rbsA==}
+  /follow-redirects/1.15.1:
+    resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'

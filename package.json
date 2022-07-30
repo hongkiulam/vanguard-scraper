@@ -17,7 +17,7 @@
   "keywords": [],
   "author": "Hong-Kiu Lam",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.27.2",
     "axios-cookiejar-support": "^1.0.1",
     "better-sqlite3": "^7.6.2",
     "dotenv": "^10.0.0",
