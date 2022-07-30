@@ -31,10 +31,11 @@ const query = (query: string) => {
   });
 };
 (async () => {
-  const results = await query(
+  const [results] = await query(
     `SELECT * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'performances LIMIT 1';`
   );
-  if (results[0] === undefined) {
+  const tableExists = results !== undefined
+  if (!tableExists) {
     await query(`
       CREATE TABLE performances (
         id integer primary key auto_increment,
