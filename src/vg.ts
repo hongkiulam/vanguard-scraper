@@ -2,15 +2,11 @@ import axios from "axios";
 import axiosCookieJarSupport from "axios-cookiejar-support";
 import tough from "tough-cookie";
 import jsdom from "jsdom";
+import config from "./config";
 
 const { JSDOM } = jsdom;
 
 axiosCookieJarSupport(axios);
-
-const SCRAPING_ANT_API_KEY = process.env.SCRAPING_ANT_API_KEY;
-const VG_USERNAME = process.env.VG_USERNAME;
-const VG_PASSWORD = process.env.VG_PASSWORD;
-const VG_USERID = process.env.VG_USERID;
 
 class Vanguard {
   _cookieJar = new tough.CookieJar();
@@ -27,7 +23,7 @@ class Vanguard {
       { url, cookies, wait_for_selector: ".stat-return .figure" },
       {
         headers: {
-          "x-api-key": SCRAPING_ANT_API_KEY,
+          "x-api-key": config.scrapingAntKey,
           Accept: "application/json",
           "Content-Type": "application/json",
         },
@@ -43,8 +39,8 @@ class Vanguard {
       "https://secure.vanguardinvestor.co.uk/en-GB/Api/Session/Login/Post",
       {
         request: {
-          Password: VG_PASSWORD,
-          Username: VG_USERNAME,
+          Password: config.vgPassword,
+          Username: config.vgUsername,
           isFromPublicSite: false,
         },
       },
@@ -59,7 +55,7 @@ class Vanguard {
   }
   async performance() {
     return await this._scrape(
-      `https://secure.vanguardinvestor.co.uk/en-gb/customer/home/${VG_USERID}/investments/personals`
+      `https://secure.vanguardinvestor.co.uk/en-gb/customer/home/${config.vgUserId}/investments/personals`
     );
   }
 }
