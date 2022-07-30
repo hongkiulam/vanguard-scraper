@@ -6,34 +6,40 @@ import db, { insertMany, insertOne } from "./database";
 import { justDate } from "./utils";
 import Vanguard from "./vg";
 
-cron.schedule("0 5 * * *", async () => {
+const getTodayLive = async () => {
   const vg = new Vanguard();
   await vg.login();
   const performance = await vg.performance();
   const value = Number(
     performance
-      .querySelector(".stat-ended .figure span")
+      .querySelector(".portfolio-header .value")
       ?.textContent?.replace("£", "")
       .replace(",", "")
   );
-  const amountChange = Number(
+  const amount_change = Number(
     performance
       .querySelector(".stat-row.last .figure span")
       ?.textContent?.replace("£", "")
       .replace(",", "")
   );
-  const percentageChange =
+  const percentage_change =
     Number(
       performance
         .querySelector(".stat-return .figure")
         ?.textContent?.replace("%", "")
-        .replace("-", "")
-        .replace("+", "")
+        // .replace("-", "")
+        // .replace("+", "")
         .replace(",", "")
     ) / 100;
+  const result = { value, amount_change, percentage_change };
+  return result;
+};
+
+cron.schedule("0 5 * * *", async () => {
+  const { value, amount_change, percentage_change } = await getTodayLive();
   insertOne({
-    amount_change: amountChange,
-    percentage_change: percentageChange,
+    amount_change: amount_change,
+    percentage_change: percentage_change,
     value: value,
     date: justDate(new Date()),
   });
@@ -42,18 +48,38 @@ cron.schedule("0 5 * * *", async () => {
 const server = http.createServer(async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=UTF-8");
   const url = req.url;
-  const method = req.method
+  const method = req.method;
+  const authHeader = req.headers.authorization;
+
   try {
-    if (url === "/" && method === "POST") {      
+    if (url === "/" && method === "POST") {
+      if (!authHeader) {
+        res.setHeader("WWW-Authenticate", "Basic");
+        res.statusCode = 401;
+        return res.end();
+      }
+      const [username, password] = Buffer.from(
+        authHeader.replace("Basic ", ""),
+        "base64"
+      )
+        .toString()
+        .split(":");
+      if (
+        username !== config.basicAuthUser ||
+        password !== config.basicAuthPassword
+      ) {
+        res.statusCode = 401;
+        return res.end();
+      }
       const buffers = [];
 
       for await (const chunk of req) {
         buffers.push(chunk);
       }
       const strData = Buffer.concat(buffers).toString();
-      const data = JSON.parse(strData)
+      const data = JSON.parse(strData);
       const result = insertMany(data);
-      return res.end(JSON.stringify(result)); 
+      return res.end(JSON.stringify(result));
     }
 
     if (url === "/" || url === "/today") {
@@ -66,7 +92,11 @@ const server = http.createServer(async (req, res) => {
       const performances = db
         .prepare("select * from performances order by date asc")
         .all();
-      res.end(JSON.stringify(performances));
+      return res.end(JSON.stringify(performances));
+    }
+    if (url === "/live") {
+      const todaysPerformance = await getTodayLive();
+      return res.end(JSON.stringify(todaysPerformance));
     }
   } catch (err) {
     const error = err as Error;

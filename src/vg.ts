@@ -24,7 +24,7 @@ class Vanguard {
       .join(";");
     const response = await axios.post(
       "https://api.scrapingant.com/v1/general",
-      { url, cookies },
+      { url, cookies, wait_for_selector: ".stat-return .figure" },
       {
         headers: {
           "x-api-key": SCRAPING_ANT_API_KEY,

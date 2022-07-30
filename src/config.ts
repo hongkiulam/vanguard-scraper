@@ -4,9 +4,10 @@ dotenv.config({ path: path.join(__dirname, "../.env") });
 
 export default {
   port: Number(process.env.PORT) || 3000,
-  mongoPassword: process.env.MONGOPASSWORD || '',
-  mongoHost: process.env.MONGOHOST || '',
-  mongoUser: process.env.MONGOUSER || '',
-  mongoPort: process.env.MONGOPORT || '',
- 
-}
+  mongoPassword: process.env.MONGOPASSWORD || "",
+  mongoHost: process.env.MONGOHOST || "",
+  mongoUser: process.env.MONGOUSER || "",
+  mongoPort: process.env.MONGOPORT || "",
+  basicAuthUser: process.env.BASIC_AUTH_USER,
+  basicAuthPassword: process.env.BASIC_AUTH_PASSWORD,
+};
