@@ -34,7 +34,8 @@ const query = (query: string) => {
   const [results] = await query(
     `SELECT * from INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'performances LIMIT 1';`
   );
-  const tableExists = results !== undefined
+  const tableExists = results[0] !== undefined
+  console.log('performances table exists:', tableExists)
   if (!tableExists) {
     await query(`
       CREATE TABLE performances (
@@ -50,7 +51,6 @@ const query = (query: string) => {
 })();
 
 export const insertOne = async (performance: Performance) => {
-  console.log(performance);
   const [result] = await query(
     `INSERT INTO performances (value, amount_change, percentage_change, date) VALUES (${
       performance.value
